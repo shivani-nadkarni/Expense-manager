@@ -1,0 +1,231 @@
+html {
+     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+header {
+    height: 80px;
+    overflow: hidden;
+}
+
+header > img {
+    width: 100%;
+    height: auto;
+}
+
+nav {
+    border: 2px ridge rgb(161, 105, 0);
+    background-color:  rgb(228, 111, 1);
+    padding:4px 6px;
+    box-shadow: 3px 3px 10px rgb(53, 53, 53);
+}
+
+nav > a {
+    font-weight: 600;
+    margin: 0px 15px; 
+    color:lightgoldenrodyellow;
+    text-decoration: none; 
+    font-size: 16px;
+}
+
+nav > a:hover {
+    color:rgb(219, 219, 219);
+    text-shadow: 2px 2px 3px rgb(31, 30, 30);
+}
+/* nav > a: {
+    color:rgb(219, 219, 219);
+    text-shadow: 2px 2px 3px rgb(172, 172, 172);
+} */
+
+nav > a:nth-last-child(2) {
+    float: right;
+}
+nav > a:nth-last-child(1) {
+    float: right;
+}
+
+body {
+    color:rgb(216, 0, 0);
+    background: rgba(156, 0, 0, 0.616);
+}
+main {
+    margin:25px 12% ;
+    border: 3px ridge firebrick;
+    background-color:rgb(250, 250, 179);
+    padding-bottom: 100px;
+    box-shadow: 2px 6px 18px rgb(31, 30, 30);
+}
+
+section {
+    padding: 10px 10%;
+}
+
+section > h3 {
+    font-size: xx-large;
+    text-align: center;
+    color:darkgreen;
+}
+section > p {
+    text-align: left;
+}
+section > p::first-letter {
+    font-size: x-large;
+    color: green;
+    font-weight: 600px;
+}
+video {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border:3px solid darkred;
+    padding : 6px;
+}
+#login-div {
+    position: relative;
+    object-position: center;
+    border: 5px ridge rgb(255, 72, 148); 
+    background-color:rgb(255, 255, 128);
+    margin: 30px 70px; 
+}
+#contact-div {
+    position: relative;
+    object-position: center;
+    border: 5px ridge rgb(255, 72, 148); 
+    background-color:rgb(255, 255, 128);
+    margin: 30px 70px; 
+}
+
+.form-style > div {
+    display: block;
+    max-width: 330px;
+    margin: 20px auto;
+}
+.form-style > div > label {
+    min-width: 117px;
+    display: inline-block;
+    text-indent: 10px;
+    font-weight: 600;
+    color: rgb(3, 3, 73);
+} 
+.form-style > div > button {
+    display: block;
+    max-width: 90px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 5px 20px;
+    font-weight: 600;
+    background-color: whitesmoke;
+    border:2px ridge purple;
+}
+.form-style > div > button:hover {
+    background-color: rgb(145, 145, 216);
+}
+
+input[type=text], 
+input[type=date],
+input[type=email],
+input[type=number],
+input[type=password] {
+    border-radius: 5px;
+    height: 25px;
+    min-width: 180px;
+}
+input[type=text]:hover,
+input[type=password]:hover,
+input[type=email]:hover,
+input[type=number]:hover,
+input[type=date]:hover {
+    background-color: rgb(220, 220, 245);
+}
+input[type=text]:focus, 
+input[type=date]:focus,
+input[type=email]:focus,
+input[type=number]:focus,
+input[type=password]:focus{
+    background-color: rgb(220, 220, 245);
+    box-shadow: 2px 6px 4px rgb(31, 30, 30);
+}
+
+input[type=checkbox] {
+    margin: auto 2px;
+    display: inline-block;
+    width:10px;
+    height: 10px;
+    padding: 9px;
+    -webkit-appearance: none;
+    border: 1px solid #cacece;
+    padding: 9px;
+    background-color: rgb(95, 233, 233);
+    box-shadow: 1px 1px 5px black;
+}
+
+input[type=checkbox]:checked{
+    background-color:rgb(0, 61, 192);
+    box-shadow: 2px 2px 10px black;
+    border: 1px solid rgb(3, 27, 26);
+}
+
+th,td{
+    padding: 4px 2px;
+    text-align: left;
+    height: auto;
+    border: 1px solid black;
+}
+thead > tr {
+    background-color: #fffc4f;
+}
+
+table {
+    width: 100%;
+    border: 1px;
+    border-collapse: collapse;
+}
+
+@media screen and (max-width: 1200px) {
+    nav > a {
+        margin-right: 5%;
+        color: white;
+        text-decoration: none; 
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 820px) {
+    nav > a {
+        margin-right: 5%;
+        margin-right:5%;
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    nav > a {
+        margin-right: 2%;
+        margin-right:2%;
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    nav > a {
+        margin-right: 1%;
+        margin-right:1%;
+        font-size: 8px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

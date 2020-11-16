@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Expense Manager Home</title>
+        <link rel="stylesheet" href="css/appStyle.css"/>
+        <script src="js/jQuery-3.5.1.min.js"></script>
+        <script src="js/validation.js"></script>
+        <script src="js/jqueryCommonStyles.js"></script> 
+        <script>
+
+            function unValidation(isValid) {
+                if (isValid) {
+                    document.getElementById("spn_un").innerText = "";
+                } else {
+                    document.getElementById("spn_un").innerText = "*";
+
+                }
+            }
+            function pwValidation(isValid) {
+                if (isValid) {
+                    document.getElementById("spn_pw").innerText = "";
+                } else {
+                    document.getElementById("spn_pw").innerText = "*";
+                }
+            }
+
+            function handleClick(event) {
+                event.preventDefault();
+
+                var un = document.getElementById("username").value;
+                var pw = document.getElementById("password").value;
+               
+                if(un === "shivani" && pw === "123") {
+                    localStorage.setItem("username", un);
+                    //sessionStorage.setItem("username", un);
+                    window.location.href = "home.html";
+                } else {
+                    document.getElementById("res").value = "Invalid username/password. Try again.";
+                }
+
+               
+            }
+        </script>
+       
+    </head>
+    <body>
+        
+        <header>
+            <img src="img/banner2.jpg" alt="banner"/>
+        </header>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="aboutus.html">About us</a>
+            <a href="explist.html">Expense list</a>
+            <a href="addexp.html">Add expense</a>
+            <a href="reports.html">Reports</a>
+            <a href="contactus.html">Contact us</a>
+            <a href="#">Login</a>
+            <a href="register.html">Register</a>
+        </nav>
+            
+        <main>
+            <section>
+                <h3>Login</h3>
+                <div id="login-div">
+                    <form method="POST" action="#" class="form-style">
+                        <div>
+                            <label>User Name</label>
+                            <input id="username" type="text" placeholder="Enter user name" 
+                            autofocus 
+                            required
+                            pattern="[a-zA-Z ]+"
+                            onblur="validateNull(event.target.value, unValidation);"/>
+                            <span id="spn_un">*</span>
+                        </div>
+                        <div>
+                            <label>Password</label>
+                            <input id="password" type="password" placeholder="Enter password" 
+                            required
+                            onblur="validateNull(event.target.value, pwValidation);"/>
+                            <span id="spn_pw">*</span>
+                        </div>
+                        
+                        <div>
+                            <button type="submit" onclick="handleClick(event)">Login</button>
+                        </div>
+                        <div>
+                            <output id="res"></output>
+                        </div>
+                        <!-- <div>
+                            <button onclick="openRegister();">Open Register</button>
+                            <button onclick="closeRegister();">Close Register</button>
+                            <button onclick="window.open('www.google.com', '_blank')">Google</button>
+                        </div> -->
+                    </form>
+                </div>
+            
+            </section>
+        </main>
+       
+    </body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Expense Manager Home</title>
+        <link rel="stylesheet" href="css/appStyle.css"/>
+        <script src="js/jQuery-3.5.1.min.js"></script>
+        <script src="js/config.js"></script>
+        <script src="js/jqueryCommonStyles.js"></script> 
+        <script>
+            //declare a global variable to store entire expense list
+            let gList = [];
+
+            // this clears up the table body 
+            function clearTbody() {
+                tbody = document.getElementById("expTbody");
+                while(tbody.firstChild) {
+                    tbody.removeChild(tbody.lastChild);
+                }
+            }
+            
+            // this function takes expense list as the argument
+            // called to dynamically create the table content
+            function updateList(list) {
+                // assign the entire expense list
+                gList = list;
+
+                // clear the table body if it exists
+                clearTbody();
+                
+                tbody = document.getElementById("expTbody");
+                const len = list.length;
+                for(let i=0; i<len; i++){
+                    //create a new row element
+                    const tr = document.createElement("tr");
+                    
+                    //create data cell element for each expense property
+                    //and assign property valuea as the text in the cell
+                    const td1 = document.createElement("td");
+                    td1.innerText = list[i]._id;
+
+                    const td2 = document.createElement("td");
+                    td2.innerText = list[i].category;
+
+                    const td3 = document.createElement("td");
+                    td3.innerText = list[i].title;
+
+                    const td4 = document.createElement("td");
+                    td4.innerText = list[i].amount;
+
+                    const td5 = document.createElement("td");
+                    td5.innerText = list[i].edate;
+                    
+                    // create img element for delete operation
+                    const td6 = document.createElement("td");
+                    const img = document.createElement("img");
+
+                    //set image attributes
+                    img.setAttribute("src", "img/unchecked.png");
+                    img.setAttribute("alt", "Del");
+                    img.setAttribute('id', list[i]._id);
+
+                    // add event for click of delete image
+                    // this in invoked only when delete image is clicked
+                    img.addEventListener("click", function() {
+                        // prompt for confirmation
+                        if(confirm("are you sure?")) {
+                            // if yes get expense id corresponding to selected expense row 
+                            const id = img.getAttribute("id");
+                            //call function to delete row
+                            //pass callback that will update the table body after delete
+                            delExp(id, () => getExpList(updateList));
+                        }
+                    });
+                    // add img to the cell of the row
+                    td6.appendChild(img);
+                    
+                    // create img element for edit operation
+                    const td7 = document.createElement("td");
+                    const img2 = document.createElement("img");
+
+                    //set image attributes
+                    img2.setAttribute("src", "img/checked.png");
+                    img2.setAttribute("alt", "Edit");
+                    img2.setAttribute('id', list[i]._id);
+
+                    // add event for click of edit image
+                    // this is invoked only when edit image is clicked
+                    img2.addEventListener("click", function() {
+                        // get expense id corresponding to selected expense row
+                        const id = img2.getAttribute("id");
+                        // show the edit input form 
+                        $("#edit-form").show();
+                        //invoked to fill the input form with current expense property values
+                        showDataInForm(i);
+                    });
+                    // add img to the cell of the row
+                    td7.appendChild(img2);
+                    // append all data cells to the table row
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+                    tr.appendChild(td4);
+                    tr.appendChild(td5);
+                    tr.appendChild(td6);
+                    tr.appendChild(td7);
+                    //append the table row to the table body
+                    tbody.appendChild(tr);
+                }
+            }
+            
+            // this populates the edit input form with the current expense values
+            function showDataInForm(i){
+                document.getElementById("category").value = gList[i].category;
+                document.getElementById("title").value = gList[i].title;
+                document.getElementById("amount").value = gList[i].amount;
+                document.getElementById("edate").value = gList[i].edate;
+                document.getElementById("exp_id").value = gList[i]._id;
+            }
+            
+            // this function is invoked when update button is clicked 
+            // after making all new changes 
+            function edit(event) {
+                event.preventDefault();
+                // get all values entered by the user
+                const exp = {
+                    category:document.getElementById("category").value,
+                    title:document.getElementById("title").value,
+                    amount:document.getElementById("amount").value,
+                    edate:document.getElementById("edate").value
+                }
+                const id =  document.getElementById("exp_id").value;
+                //call this function to perform update operation to the db
+                //pass the callback that fetch the expenses from the db
+                //and will erase and re-populate the table body
+                editExp(id, exp, () => {
+                    $("#edit-form").hide();
+                    getExpList(updateList);
+                });
+            }
+
+        </script>
+    </head>
+    <body onload="getExpList(updateList)">
+        <header>
+            <img src="img/banner2.jpg" alt="banner"/>
+        </header>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="aboutus.html">About us</a>
+            <a href="#">Expense list</a>
+            <a href="addexp.html">Add expense</a>
+            <a href="reports.html">Reports</a>
+            <a href="contactus.html">Contact us</a>
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
+        </nav>
+        
+        <main>
+
+            <section>
+                <h3>Expense List</h3>
+                <div>
+                    <form id="edit-form" style="display: none;" class="form-style">
+                        <div>
+                            <input type="hidden" id="exp_id">
+                        </div>
+                        <div>
+                            <input type="text" id="category" placeholder="Category eg.Travel">
+                            <span id="spn_category">*</span>
+                        </div>
+                        <div>
+                            <input type="text" id="title" placeholder="Title">
+                            <span id="spn_title">*</span>
+                        </div>
+                        <div>
+                            <input type="number" id="amount" placeholder="Amount in Rupees">
+                            <span id="spn_amount">*</span>
+                        </div>
+                        <div>
+                            <input type="date" id="edate" placeholder="Date of expense">
+                            <span id="spn_edate">*</span>
+                        </div>
+                        <div>
+                            <span id="spn_form"></span>
+                        </div>
+                        <div>
+                            <button id="expbtn" type="submit" onclick="edit(event);">Add Expense</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <section>
+                <table>
+                    <thead>
+                        <th>Id</th>
+                        <th>Category</th>
+                        <th>Title</th>
+                        <th>Amount</th>
+                        <th>Edate</th>
+                        <th></th>
+                        <th></th>
+                    </thead>
+                    <tbody id="expTbody">
+                        
+                    </tbody>
+                </table>
+
+            </section>
+        </main>
+    </body>
+</html>
