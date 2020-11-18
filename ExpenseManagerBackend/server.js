@@ -17,39 +17,39 @@ const app = express();
 const bodyParser = require('body-parser');
 
 // import mongodb driver
-const mongodb = require("mongodb"); 
+const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
 
 // To enable CORS
-app.use(function(req,res,next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "DELETE");
-    
+
     res.header("Access-Control-Allow-Methods", "DELETE, PUT");
     next();
 });
 
 // Parse the request body
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // this API will fetch all expenses
-app.get("/expenses", function(req, res) {
+app.get("/expenses", function (req, res) {
     // connect to local mongodb using url
-    mongoClient.connect(appConst.mongoDbUrl, { useUnifiedTopology: true }, function(err, client) {
-        if(err) {
+    mongoClient.connect(appConst.mongoDbUrl, { useUnifiedTopology: true }, function (err, client) {
+        if (err) {
             res.status(400);
-            res.send({status:false, msg: err.message});
+            res.send({ status: false, msg: err.message });
         } else {
             // connect to the database 
             const db = client.db(appConst.mongoDbName);
             // make a call to db to fetch all expenses and send the result in response
-            db.collection("expense").find({}).toArray(function(err, result) {
-                if(err) {
-                    res.send({status:false, msg: err.message});
+            db.collection("expense").find({}).toArray(function (err, result) {
+                if (err) {
+                    res.send({ status: false, msg: err.message });
                 } else {
-                    res.send({status:true, msg: 'Success', expenses: result});
+                    res.send({ status: true, msg: 'Success', expenses: result });
                 }
             });
         }
@@ -57,9 +57,9 @@ app.get("/expenses", function(req, res) {
 });
 
 // This API will add a new expense
-app.post("/expenses", function(req, res) {
+app.post("/expenses", function (req, res) {
     // connect to local mongodb using url
-    mongoClient.connect(appConst.mongoDbUrl,{ useUnifiedTopology: true }, function(err, client) {
+    mongoClient.connect(appConst.mongoDbUrl, { useUnifiedTopology: true }, function (err, client) {
         // doc will store all values from the request body if present.
         const doc = {}
         if (req.body.title) {
@@ -75,19 +75,19 @@ app.post("/expenses", function(req, res) {
             doc.category = req.body.category
         }
         // if error while connection to mongodb
-        if(err) {
+        if (err) {
             res.status(400);
-            res.send({status:false, msg: err.message});
+            res.send({ status: false, msg: err.message });
         } else {
             // connect to the database
             const db = client.db(appConst.mongoDbName);
             // insert doc in expense 
-            db.collection("expense").insertOne(doc, function(err, result) {
-                if(err) {
-                    res.send({status: false, msg: 'Not inserted'});
+            db.collection("expense").insertOne(doc, function (err, result) {
+                if (err) {
+                    res.send({ status: false, msg: 'Not inserted' });
                 } else {
                     res.status(201);
-                    res.send({status: true, msg: 'Inserted Successfully', result: result});
+                    res.send({ status: true, msg: 'Inserted Successfully', result: result });
                 }
             });
         }
@@ -95,24 +95,24 @@ app.post("/expenses", function(req, res) {
 });
 
 // This API will delete expense with id
-app.delete("/expenses", function(req, res) {
+app.delete("/expenses", function (req, res) {
     // connect to local mongodb using url
-    mongoClient.connect(appConst.mongoDbUrl,{ useUnifiedTopology: true }, function(err, client) {
+    mongoClient.connect(appConst.mongoDbUrl, { useUnifiedTopology: true }, function (err, client) {
         // extract id from request body
         id = mongodb.ObjectID(req.body._id);
-        if(err) {
+        if (err) {
             res.status(400);
-            res.send({status:false, msg: err.message});
+            res.send({ status: false, msg: err.message });
         } else {
             // connect to the database
             const db = client.db(appConst.mongoDbName);
             // delete the expense with that id
-            db.collection("expense").deleteOne({ _id: id}, function(err, result) {
-                if(err) {
-                    res.send({status: false, msg: 'Not deleted'});
+            db.collection("expense").deleteOne({ _id: id }, function (err, result) {
+                if (err) {
+                    res.send({ status: false, msg: 'Not deleted' });
                 } else {
                     res.status(200);
-                    res.send({status: true, msg: 'Deleted Successfully', result: result});
+                    res.send({ status: true, msg: 'Deleted Successfully', result: result });
                 }
             });
         }
@@ -148,7 +148,7 @@ app.put("/expenses/:id", function (req, res) {
             // connect to the database
             const db = client.db(appConst.mongoDbName);
             // set query for updating with new values
-            var newvalues = { $set: doc};
+            var newvalues = { $set: doc };
             // update the expense
             db.collection("expense").updateOne(parameter, newvalues, function (err, result) {
                 if (err) {
@@ -198,7 +198,7 @@ app.put("/update2", function (req, res) {
 
 
 // This API is to register a new user
-app.post("/register", function(req, res){
+app.post("/register", function (req, res) {
     // connect to local mongodb using url
     mongoClient.connect(appConst.mongoDbUrl, { useUnifiedTopology: true }, function (err, client) {
         // get all values from request body
@@ -209,7 +209,7 @@ app.post("/register", function(req, res){
             phone: req.body.phone,
             city: req.body.city
         };
-        
+
         if (err) {
             res.status(400);
             res.send({ status: false, msg: err.message });
@@ -217,7 +217,7 @@ app.post("/register", function(req, res){
             // connect to the database
             const db = client.db(appConst.mongoDbName);
             // insert the record
-            db.collection("users").insertOne(doc, function(err, result) {
+            db.collection("users").insertOne(doc, function (err, result) {
                 if (err) {
                     res.send({ status: false, msg: 'Not Registered' });
                 } else {
@@ -227,11 +227,11 @@ app.post("/register", function(req, res){
             });
         }
     });
-    
-}) ;
+
+});
 
 // This API call authenticates a user
-app.post("/login", function(req, res){
+app.post("/login", function (req, res) {
     // connect to local mongodb using url
     mongoClient.connect(appConst.mongoDbUrl, { useUnifiedTopology: true }, function (err, client) {
         // get user login credentials
@@ -239,7 +239,7 @@ app.post("/login", function(req, res){
             name: req.body.name,
             password: req.body.password,
         };
-        
+
         if (err) {
             res.status(400);
             res.send({ status: false, msg: err.message });
@@ -247,28 +247,28 @@ app.post("/login", function(req, res){
             // connect to the database
             const db = client.db(appConst.mongoDbName);
             // fetch the user
-            db.collection("users").findOne(doc, function(err, result) {
+            db.collection("users").findOne(doc, function (err, result) {
                 if (err) {
-                    res.send({ status: false, msg: 'user does not exist'});
+                    res.send({ status: false, msg: 'user does not exist' });
                 } else {
-                    if(result != null) {
+                    if (result != null) {
                         // console.log(result);
                         // console.log(result.status);
                         res.status(200);
                         res.send({ status: true, msg: 'user exists', result: result });
                     } else {
                         res.status(404);
-                        res.send({ status: false, msg: 'user does not exist'})
+                        res.send({ status: false, msg: 'user does not exist' })
                     }
                 }
             });
         }
     });
-    
-}) ;
+
+});
 
 // deploy server on the port
 app.listen(appConst.Port, () => {
-        // display msg when the server starts
-        console.log("Expense Manager server is on "+ appConst.Port);
-    });
+    // display msg when the server starts
+    console.log("Expense Manager server is on " + appConst.Port);
+});

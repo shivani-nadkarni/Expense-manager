@@ -20,23 +20,23 @@ const expenseModel = require('./mongoose_model');
 // body parser is used to parse request body
 const bodyParser = require('body-parser');
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // API to fetch all expenses
-app.get("/expenses", function(req, res) {
+app.get("/expenses", function (req, res) {
     // connect to expense database, using database url
     mongoose.connect(appConst.mongoDbUrl + "/" + appConst.mongoDbName, function (err) {
-        if(err) {
+        if (err) {
             res.status(400);
-            res.send({status:false, msg: err.message});
+            res.send({ status: false, msg: err.message });
         } else {
             // fetch all expenses
-            expenseModel.find({}, function(err, result) {
-                if(err) {
-                    res.send({status:false, msg: err.message});  
+            expenseModel.find({}, function (err, result) {
+                if (err) {
+                    res.send({ status: false, msg: err.message });
                 } else {
-                    res.send({status:true, msg: 'Success', expenses: result});
+                    res.send({ status: true, msg: 'Success', expenses: result });
                 }
             });
         }
@@ -45,5 +45,5 @@ app.get("/expenses", function(req, res) {
 
 // deploy the server on the port
 app.listen(appConst.Port, () => {
-    console.log("Expense Manager server is on "+ appConst.Port);
+    console.log("Expense Manager server is on " + appConst.Port);
 });
