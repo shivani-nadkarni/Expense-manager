@@ -1,15 +1,26 @@
+/*
+this file has all APIs to interact with the expense database.
+Allows insertion, deletion, updation of expenses.
+Allows user authentication.
+Allows new user registration.
+Deploys the server on port.
+*/
+
+// import all the constants
 const appConst = require('./appConst.js');
+
+// import express module, create an express variable 
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
 
-const axios = require('axios');
+// bodyParser used to parse the request body
+const bodyParser = require('body-parser');
 
-const mongodb = require("mongodb"); //driver
-const { Port, mongoDbUrl } = require('./appConst.js');
-const { default: Axios } = require('axios');
+// import mongodb driver
+const mongodb = require("mongodb"); 
 const mongoClient = mongodb.MongoClient;
 
+// To enable CORS
 app.use(function(req,res,next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -19,31 +30,21 @@ app.use(function(req,res,next) {
     next();
 });
 
-// app.use(function(req, res, next) {​​​​​
-//     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// }​​​​​);
-
+// Parse the request body
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-// base url
-app.use('/', express.static("./pages/home"));
-
-app.use('/loginpage', express.static("./pages/login"));
-
-app.use('/registerpage', express.static("./pages/register"));
-
-app.use("/aboutus", express.static('./pages/aboutus'));
-
+// this API will fetch all expenses
 app.get("/expenses", function(req, res) {
+    // connect to local mongodb using url
     mongoClient.connect(appConst.mongoDbUrl, { useUnifiedTopology: true }, function(err, client) {
         if(err) {
             res.status(400);
             res.send({status:false, msg: err.message});
         } else {
+            // connect to the database 
             const db = client.db(appConst.mongoDbName);
+            // make a call to db to fetch all expenses and send the result in response
             db.collection("expense").find({}).toArray(function(err, result) {
                 if(err) {
                     res.send({status:false, msg: err.message});
@@ -55,8 +56,11 @@ app.get("/expenses", function(req, res) {
     });
 });
 
+// This API will add a new expense
 app.post("/expenses", function(req, res) {
+    // connect to local mongodb using url
     mongoClient.connect(appConst.mongoDbUrl,{ useUnifiedTopology: true }, function(err, client) {
+        // doc will store all values from the request body if present.
         const doc = {}
         if (req.body.title) {
             doc.title = req.body.title
@@ -70,13 +74,14 @@ app.post("/expenses", function(req, res) {
         if (req.body.category) {
             doc.category = req.body.category
         }
-        
+        // if error while connection to mongodb
         if(err) {
             res.status(400);
             res.send({status:false, msg: err.message});
         } else {
+            // connect to the database
             const db = client.db(appConst.mongoDbName);
-
+            // insert doc in expense 
             db.collection("expense").insertOne(doc, function(err, result) {
                 if(err) {
                     res.send({status: false, msg: 'Not inserted'});
@@ -89,17 +94,19 @@ app.post("/expenses", function(req, res) {
     });
 });
 
+// This API will delete expense with id
 app.delete("/expenses", function(req, res) {
+    // connect to local mongodb using url
     mongoClient.connect(appConst.mongoDbUrl,{ useUnifiedTopology: true }, function(err, client) {
+        // extract id from request body
         id = mongodb.ObjectID(req.body._id);
-        // category = req.body.category
-        console.log(id);
         if(err) {
             res.status(400);
             res.send({status:false, msg: err.message});
         } else {
+            // connect to the database
             const db = client.db(appConst.mongoDbName);
-
+            // delete the expense with that id
             db.collection("expense").deleteOne({ _id: id}, function(err, result) {
                 if(err) {
                     res.send({status: false, msg: 'Not deleted'});
@@ -112,12 +119,15 @@ app.delete("/expenses", function(req, res) {
     });
 });
 
+// This API updates an expense. id is accepted through param variable
 app.put("/expenses/:id", function (req, res) {
+    // connect to local mongodb using url
     mongoClient.connect(appConst.mongoDbUrl, { useUnifiedTopology: true }, function (err, client) {
+        // extract id from params
         parameter = {
             _id: mongodb.ObjectID(req.params.id)
         }
-        
+        // doc extracts and stores new values sent through request body
         const doc = {};
         if (req.body.title) {
             doc.title = req.body.title
@@ -135,9 +145,11 @@ app.put("/expenses/:id", function (req, res) {
             res.status(400);
             res.send({ status: false, msg: err.message });
         } else {
+            // connect to the database
             const db = client.db(appConst.mongoDbName);
-            //var query = { id: req.par };
+            // set query for updating with new values
             var newvalues = { $set: doc};
+            // update the expense
             db.collection("expense").updateOne(parameter, newvalues, function (err, result) {
                 if (err) {
                     res.send({ status: false, msg: 'Not updated' });
@@ -150,8 +162,11 @@ app.put("/expenses/:id", function (req, res) {
     });
 });
 
+// This API used to update title of expense with given category
 app.put("/update2", function (req, res) {
+    // connect to local mongodb using url
     mongoClient.connect(appConst.mongoDbUrl, { useUnifiedTopology: true }, function (err, client) {
+        // get category of expense and title that will be replaced with
         const doc = {};
         if (req.body.title) {
             doc.title = req.body.title
@@ -164,8 +179,11 @@ app.put("/update2", function (req, res) {
             res.send({ status: false, msg: err.message });
         } else {
             const db = client.db(appConst.mongoDbName);
+            // query to project
             var query = { category: doc.category };
+            // query to update
             var newvalues = { $set: { title: doc.title } };
+            // db call to update
             db.collection("expense").updateOne(query, newvalues, function (err, result) {
                 if (err) {
                     res.send({ status: false, msg: 'Not updated' });
@@ -178,23 +196,12 @@ app.put("/update2", function (req, res) {
     });
 });
 
-app.listen(appConst.Port, () => {
-    console.log("Expense Manager server is on "+ appConst.Port);
-});
 
-app.get("/userList", function(req, res) {
-    //Axios.getUri
-    axios.get(appConst.userList)
-    .then(function(data) {
-        res.send({status:true, data:data});
-    })
-    .catch(function (err){
-        res.send({status:false, error:err});
-    });
-});
-
+// This API is to register a new user
 app.post("/register", function(req, res){
+    // connect to local mongodb using url
     mongoClient.connect(appConst.mongoDbUrl, { useUnifiedTopology: true }, function (err, client) {
+        // get all values from request body
         const doc = {
             name: req.body.name,
             password: req.body.password,
@@ -207,7 +214,9 @@ app.post("/register", function(req, res){
             res.status(400);
             res.send({ status: false, msg: err.message });
         } else {
+            // connect to the database
             const db = client.db(appConst.mongoDbName);
+            // insert the record
             db.collection("users").insertOne(doc, function(err, result) {
                 if (err) {
                     res.send({ status: false, msg: 'Not Registered' });
@@ -218,11 +227,14 @@ app.post("/register", function(req, res){
             });
         }
     });
-
+    
 }) ;
 
+// This API call authenticates a user
 app.post("/login", function(req, res){
+    // connect to local mongodb using url
     mongoClient.connect(appConst.mongoDbUrl, { useUnifiedTopology: true }, function (err, client) {
+        // get user login credentials
         const doc = {
             name: req.body.name,
             password: req.body.password,
@@ -232,14 +244,16 @@ app.post("/login", function(req, res){
             res.status(400);
             res.send({ status: false, msg: err.message });
         } else {
+            // connect to the database
             const db = client.db(appConst.mongoDbName);
+            // fetch the user
             db.collection("users").findOne(doc, function(err, result) {
                 if (err) {
                     res.send({ status: false, msg: 'user does not exist'});
                 } else {
                     if(result != null) {
-                        console.log(result);
-                        console.log(result.status);
+                        // console.log(result);
+                        // console.log(result.status);
                         res.status(200);
                         res.send({ status: true, msg: 'user exists', result: result });
                     } else {
@@ -250,5 +264,11 @@ app.post("/login", function(req, res){
             });
         }
     });
-
+    
 }) ;
+
+// deploy server on the port
+app.listen(appConst.Port, () => {
+        // display msg when the server starts
+        console.log("Expense Manager server is on "+ appConst.Port);
+    });
