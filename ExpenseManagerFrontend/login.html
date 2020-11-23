@@ -31,8 +31,7 @@
                 var pw = document.getElementById("password").value;
                
                 if(un === "shivani" && pw === "123") {
-                    localStorage.setItem("username", un);
-                    //sessionStorage.setItem("username", un);
+                    sessionStorage.setItem("username", un);
                     window.location.href = "home.html";
                 } else {
                     document.getElementById("res").value = "Invalid username/password. Try again.";
@@ -87,11 +86,6 @@
                         <div>
                             <output id="res"></output>
                         </div>
-                        <!-- <div>
-                            <button onclick="openRegister();">Open Register</button>
-                            <button onclick="closeRegister();">Close Register</button>
-                            <button onclick="window.open('www.google.com', '_blank')">Google</button>
-                        </div> -->
                     </form>
                 </div>
             

@@ -30,10 +30,6 @@ nav > a:hover {
     color:rgb(219, 219, 219);
     text-shadow: 2px 2px 3px rgb(31, 30, 30);
 }
-/* nav > a: {
-    color:rgb(219, 219, 219);
-    text-shadow: 2px 2px 3px rgb(172, 172, 172);
-} */
 
 nav > a:nth-last-child(2) {
     float: right;
@@ -213,19 +209,3 @@ table {
         font-size: 8px;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

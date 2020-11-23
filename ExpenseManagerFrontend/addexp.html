@@ -10,6 +10,7 @@
             let dateok = false;
             let otherok = false;
 
+            // this clears the input fields on data submission
             function callBackSubmit(msg) {
                 $("#spn_form").text(msg).css("color", "red");
                 $("#category").val("");
@@ -17,18 +18,10 @@
                 $("#amount").val("");
                 $("#edate").val(new Date());
             }
-
+            // some jquery 
             $(document).ready(function() {
-                $("a[href='#']").css("color",  "rgb(1, 1, 48)");
-                
-                $("p").hover(function() {
-                    $(this).css("color", "blue");
-                });
-                
-                $("p").mouseleave(function() {
-                    $(this).css("color", "red");
-                });
-                
+                // input validation on key changes in the input fields
+                // display '*' in red if input doesn't meet expectations
                 $("input[type='text'], input[type='number']").keyup(function(event) {
                     let val = $(this).val().trim();
                     const span = $(this).next();
@@ -39,7 +32,6 @@
                         const id = $(this).attr("id");
                         if((id === "category" || id === "title") && val.length <= 2) {
                             span.text("*");
-                            //console.log("1");
                             otherok = false;
                         } else if(id === "amount" && Number(val) < 1) {
                             otherok = false;
@@ -50,7 +42,8 @@
                         }
                     }
                 });
-   
+                // input validation on key changes in the date input field
+                // display '*' in red if input doesn't meet expectations
                 $("input[type='date']").change(function(event) {
                     let val = $(this).val();
                     const span = $(this).next();
@@ -62,9 +55,13 @@
                         dateok = true;
                     }
                 });
-
+                // on clicking submit button
                 $("#expbtn").click(function() {
+                    // disable html default action
+                    // won't go to action endpoint
                     event.preventDefault();
+                    // if all validations are successful
+                    // store the input values in data
                     if(dateok && otherok) {
                         const data = {
                             "category" : $("#category").val().trim(),
@@ -72,10 +69,11 @@
                             "amount" : Number($("#amount").val()),
                             "edate" : $("#edate").val()
                         }   
-                        
+                        // success message
                         $("#spn_form").text("all fine.").css("color", "red");
                         addExp(data, callBackSubmit);
                     } else {
+                        // error message
                         $("#spn_form").text("Please correct all the errors.").css("color", "red");
                     }
 
@@ -119,18 +117,22 @@
                 <div id="contact-div">
                     <form class="form-style">
                     <div>
-                        <input type="text" id="category" placeholder="Category eg.Travel">
+                        <label>Category</label>
+                        <input type="text" id="category" placeholder="eg.Travel">
                         <span id="spn_category">*</span>
                     </div>
                     <div>
-                        <input type="text" id="title" placeholder="Title">
+                        <label>Title</label>
+                        <input type="text" id="title" placeholder="eg.Travel to Delhi">
                         <span id="spn_title">*</span>
                     </div>
                     <div>
+                        <label>Amount</label>
                         <input type="number" id="amount" placeholder="Amount in Rupees">
                         <span id="spn_amount">*</span>
                     </div>
                     <div>
+                        <label>Date</label>
                         <input type="date" id="edate" placeholder="Date of expense">
                         <span id="spn_edate">*</span>
                     </div>

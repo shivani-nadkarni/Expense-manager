@@ -18,6 +18,7 @@ function getExpList(callBack) {
     });
 }
 
+// API call to delete the expense 
 function delExp(id, callBack) {
     const body = {
         _id: id
@@ -34,7 +35,8 @@ function delExp(id, callBack) {
         console.log("Err " + err);
     });
 }
-
+ 
+// API call to update the expense
 function editExp(id, exp, callBack) {
     fetch(baseUrl+'/'+id, {method:'PUT', 
                     headers: {'Content-Type': 'application/json'}, 
@@ -49,7 +51,7 @@ function editExp(id, exp, callBack) {
     });
 }
 
-
+// ajax call to add new expense
 function addExp(data, callBack) {
     $.ajax({
         url:baseUrl,

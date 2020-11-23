@@ -7,6 +7,7 @@
         <script src="js/jqueryCommonStyles.js"></script> 
         <script src="js/validation.js"></script>
         <script>
+            //username validation
             function unValidation(isValid) {
                 if(isValid) {
                     document.getElementById("un_msg").innerText = "";
@@ -14,6 +15,7 @@
                     document.getElementById("un_msg").innerText = "**";
                 }
             }
+            //password validation
             function pwValidation(isValid) {
                 if(isValid){
                     document.getElementById("pw_msg").innerText="";
